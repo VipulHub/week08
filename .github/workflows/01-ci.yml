@@ -1,11 +1,16 @@
 name: 01 - CI
 
 on:
-  # Trigger the workflow on push to main branch
+  # Validate pull requests into main (tests only - no images pushed)
+  pull_request:
+    branches:
+      - main
+
+  # Merging a PR pushes to main -> full CI -> starts the CD chain
   push:
     branches:
       - main
-  
+
   # Manual trigger for the workflow
   workflow_dispatch:
 
@@ -113,7 +118,7 @@ jobs:
     needs:
       - backend-test
 
-    # Build and push when code is pushed to main or manually triggered
+    # Only build/push on push to main or manual run (NOT on pull requests)
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     strategy:
